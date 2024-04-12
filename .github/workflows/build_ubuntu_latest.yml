@@ -21,11 +21,6 @@ jobs:
         id: cuda-toolkit
         with:
           cuda: '11.2.1'
-      - name: Setup pip cache
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip/wheels
-          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('**/requirements.txt') }}
       - name: Install dependencies
         run: |
           sudo apt update

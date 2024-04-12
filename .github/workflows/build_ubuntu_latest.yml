@@ -40,8 +40,8 @@ jobs:
               sudo apt-get autoremove -y >/dev/null 2>&1
               sudo apt-get autoclean -y >/dev/null 2>&1
               echo "some packages purged"
-          - name: Check disk space
-            run: |
+      - name: Check disk space
+        run: |
               sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
               df . -h
               sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head

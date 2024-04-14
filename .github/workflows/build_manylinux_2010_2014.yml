@@ -45,8 +45,9 @@ jobs:
           sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
           df . -h
           sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head
-      - run: |
-          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
+      - name: Configure docker
+        run: |
+          docker exec -it micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
           # Remove existing directory if it exists
           if [ -d "repository" ]; then
             rm -rf "repository"
@@ -60,9 +61,6 @@ jobs:
 
           # Checkout the current branch
           git checkout "${{ github.ref }}"
-
-          # Optionally, you can also fetch the latest commits
-          git pull origin "${{ github.ref }}"
         
           cd ..
           /bin/bash GibsonEnv/build_scripts/${{ matrix.manylinux_image }}/configure_linux.sh

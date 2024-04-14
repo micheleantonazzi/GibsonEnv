@@ -47,8 +47,7 @@ jobs:
           sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head
       - name: Configure docker
         run: |
-          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
-          docker exec -it micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
+          docker run -it micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
           # Remove existing directory if it exists
           if [ -d "repository" ]; then
             rm -rf "repository"
@@ -81,7 +80,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
+          docker exec -it micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
           pip${{ matrix.python_version }} install twine
           python${{ matrix.python_version }} -m twine upload dist/gibson*.tar.gz --skip-existing
           python${{ matrix.python_version }} -m twine upload wheelhouse/* --skip-existing

@@ -16,6 +16,7 @@ jobs:
             python_version: '3.9'
           - manylinux_image: manylinux2010
             python_version: '3.10'
+    container: micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
     steps:
       - name: Check disk space
         run: df . -h
@@ -45,31 +46,27 @@ jobs:
           sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr | head
           df . -h
           sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head
-      - name: Configure docker
-        uses: docker:micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
+      - uses: actions/checkout@v1
+        with:
+          submodules: recursive
+      - name: Setup pip cache
+        if: ${{ matrix.manylinux_image == 'manylinux2014' }}
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip/wheels
+          key: ${{ matrix.manylinux_image }}-${{ matrix.python_version }}-${{ hashFiles('**/requirements.txt') }}
+      - name: Configure system
         run: |
-          # Remove existing directory if it exists
-          if [ -d "repository" ]; then
-            rm -rf "repository"
-          fi
-
-          # Clone the repository
-          git clone "https://github.com/${{ github.repository }}" "GibsonEnv" --recursive
-
-          # Navigate to the repository directory
-          cd "GibsonEnv"
-
-          # Checkout the current branch
-          git checkout "${{ github.ref }}"
-        
           cd ..
           /bin/bash GibsonEnv/build_scripts/${{ matrix.manylinux_image }}/configure_linux.sh
-      
+      - name: Build sdist
+        run: |
           export CC=/usr/lib64/openmpi/bin/mpicc
           pip${{ matrix.python_version }} install wheel
           pip${{ matrix.python_version }} install -r build_scripts/${{ matrix.manylinux_image }}/requirements.txt
           python${{ matrix.python_version }} setup.py sdist
-      
+      - name: Build bdists
+        run: |
           export CC=/usr/lib64/openmpi/bin/mpicc
           pip${{ matrix.python_version }} install -e .
           python${{ matrix.python_version }} setup.py bdist_wheel
@@ -80,7 +77,6 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
-          docker exec -it micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
           pip${{ matrix.python_version }} install twine
           python${{ matrix.python_version }} -m twine upload dist/gibson*.tar.gz --skip-existing
           python${{ matrix.python_version }} -m twine upload wheelhouse/* --skip-existing

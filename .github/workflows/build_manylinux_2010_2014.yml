@@ -18,21 +18,33 @@ jobs:
             python_version: '3.10'
     container: micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
     steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Configure system
-        run: |
+      - run: |
+          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
+          # Remove existing directory if it exists
+          if [ -d "repository" ]; then
+            rm -rf "repository"
+          fi
+
+          # Clone the repository
+          git clone "https://github.com/${{ github.repository }}" "GibsonEnv" -- recursive
+
+          # Navigate to the repository directory
+          cd "repository"
+
+          # Checkout the current branch
+          git checkout "${{ github.ref }}"
+
+          # Optionally, you can also fetch the latest commits
+          git pull origin "${{ github.ref }}"
+        
           cd ..
           /bin/bash GibsonEnv/build_scripts/${{ matrix.manylinux_image }}/configure_linux.sh
-      - name: Build sdist
-        run: |
+      
           export CC=/usr/lib64/openmpi/bin/mpicc
           pip${{ matrix.python_version }} install wheel
           pip${{ matrix.python_version }} install -r build_scripts/${{ matrix.manylinux_image }}/requirements.txt
           python${{ matrix.python_version }} setup.py sdist
-      - name: Build bdists
-        run: |
+      
           export CC=/usr/lib64/openmpi/bin/mpicc
           pip${{ matrix.python_version }} install -e .
           python${{ matrix.python_version }} setup.py bdist_wheel
@@ -43,6 +55,7 @@ jobs:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
         run: |
+          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
           pip${{ matrix.python_version }} install twine
           python${{ matrix.python_version }} -m twine upload dist/gibson*.tar.gz --skip-existing
           python${{ matrix.python_version }} -m twine upload wheelhouse/* --skip-existing

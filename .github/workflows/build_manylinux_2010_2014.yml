@@ -53,10 +53,10 @@ jobs:
           fi
 
           # Clone the repository
-          git clone "https://github.com/${{ github.repository }}" "GibsonEnv" -- recursive
+          git clone "https://github.com/${{ github.repository }}" "GibsonEnv" --recursive
 
           # Navigate to the repository directory
-          cd "repository"
+          cd "GibsonEnv"
 
           # Checkout the current branch
           git checkout "${{ github.ref }}"

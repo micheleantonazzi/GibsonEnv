@@ -22,7 +22,7 @@ jobs:
         run: df . -h
       - name: Free disk space
         run: |
-          yum install sudo -y
+          yum install sudo curl -y
           curl https://raw.githubusercontent.com/dvershinin/apt-get-centos/master/apt-get.sh -o /usr/local/bin/apt-get
           chmod 0755 /usr/local/bin/apt-get
           sudo rm -rf \

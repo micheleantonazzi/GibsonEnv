@@ -17,41 +17,46 @@ jobs:
           - manylinux_image: manylinux2010
             python_version: '3.10'
     steps:
-      - name: Load docker
-        run: |
-          docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
-      - uses: actions/checkout@v1
-        with:
-          submodules: recursive
-      - name: Setup pip cache
-        if: ${{ matrix.manylinux_image == 'manylinux2014' }}
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip/wheels
-          key: ${{ matrix.manylinux_image }}-${{ matrix.python_version }}-${{ hashFiles('**/requirements.txt') }}
-      - name: Configure system
-        run: |
-          cd ..
+      - run: |
           lsb_release -a
-          /bin/bash GibsonEnv/build_scripts/${{ matrix.manylinux_image }}/configure_linux.sh
-      - name: Build sdist
-        run: |
-          export CC=/usr/lib64/openmpi/bin/mpicc
-          pip${{ matrix.python_version }} install wheel
-          pip${{ matrix.python_version }} install -r build_scripts/${{ matrix.manylinux_image }}/requirements.txt
-          python${{ matrix.python_version }} setup.py sdist
-      - name: Build bdists
-        run: |
-          export CC=/usr/lib64/openmpi/bin/mpicc
-          pip${{ matrix.python_version }} install -e .
-          python${{ matrix.python_version }} setup.py bdist_wheel
-          auditwheel repair dist/gibson-*-cp*
-      - name: Upload to pypi
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          pip${{ matrix.python_version }} install twine
-          python${{ matrix.python_version }} -m twine upload dist/gibson*.tar.gz --skip-existing
-          python${{ matrix.python_version }} -m twine upload wheelhouse/* --skip-existing
+    container:
+      container: micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
+      steps:
+        - name: Load docker
+          run: |
+            docker run micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1 bash
+        - uses: actions/checkout@v1
+          with:
+            submodules: recursive
+        - name: Setup pip cache
+          if: ${{ matrix.manylinux_image == 'manylinux2014' }}
+          uses: actions/cache@v2
+          with:
+            path: ~/.cache/pip/wheels
+            key: ${{ matrix.manylinux_image }}-${{ matrix.python_version }}-${{ hashFiles('**/requirements.txt') }}
+        - name: Configure system
+          run: |
+            cd ..
+            lsb_release -a
+            /bin/bash GibsonEnv/build_scripts/${{ matrix.manylinux_image }}/configure_linux.sh
+        - name: Build sdist
+          run: |
+            export CC=/usr/lib64/openmpi/bin/mpicc
+            pip${{ matrix.python_version }} install wheel
+            pip${{ matrix.python_version }} install -r build_scripts/${{ matrix.manylinux_image }}/requirements.txt
+            python${{ matrix.python_version }} setup.py sdist
+        - name: Build bdists
+          run: |
+            export CC=/usr/lib64/openmpi/bin/mpicc
+            pip${{ matrix.python_version }} install -e .
+            python${{ matrix.python_version }} setup.py bdist_wheel
+            auditwheel repair dist/gibson-*-cp*
+        - name: Upload to pypi
+          if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+          env:
+            TWINE_USERNAME: __token__
+            TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          run: |
+            pip${{ matrix.python_version }} install twine
+            python${{ matrix.python_version }} -m twine upload dist/gibson*.tar.gz --skip-existing
+            python${{ matrix.python_version }} -m twine upload wheelhouse/* --skip-existing

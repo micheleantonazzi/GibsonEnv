@@ -20,6 +20,7 @@ jobs:
       - run: |
           lsb_release -a
     container:
+      runs-on: ubuntu-latest
       container: micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
       steps:
         - name: Load docker

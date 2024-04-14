@@ -15,7 +15,6 @@ jobs:
       - name: Free disk space
         run: |
               sudo docker rmi $(docker image ls -aq) >/dev/null 2>&1 || true
-              df . -h
               sudo rm -rf \
                 /usr/share/dotnet /usr/local/lib/android /opt/ghc \
                 /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup \
@@ -32,19 +31,6 @@ jobs:
                 snmp pollinate libpq-dev postgresql-client powershell ruby-full \
                 sphinxsearch subversion mongodb-org azure-cli microsoft-edge-stable \
                 -y -f >/dev/null 2>&1
-              df . -h
-              sudo aptitude purge google-cloud-sdk -f -y >/dev/null 2>&1
-              df . -h
-              sudo aptitude purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
-              df . -h
-              sudo apt purge microsoft-edge-stable -f -y >/dev/null 2>&1 || true
-              df . -h
-              sudo aptitude purge '~n ^mysql' -f -y >/dev/null 2>&1
-              df . -h
-              sudo aptitude purge '~n ^php' -f -y >/dev/null 2>&1
-              df . -h
-              sudo aptitude purge '~n ^dotnet' -f -y >/dev/null 2>&1
-              df . -h
               sudo apt-get autoremove -y >/dev/null 2>&1
               sudo apt-get autoclean -y >/dev/null 2>&1
               echo "some packages purged"

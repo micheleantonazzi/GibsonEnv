@@ -45,7 +45,7 @@ jobs:
           sudo du /usr/ -hx -d 4 --threshold=1G | sort -hr | head
       - name: Run Docker
         run: |
-          docker run --name build docker micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
+          docker run --name manylinux micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
           yum install sudo
       - uses: actions/checkout@v1
         with:

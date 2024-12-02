@@ -12,6 +12,7 @@ cloudpickle>=0.4.1
 pygame
 mpi4py
 opencv-python==4.2.0.32; python_version == '2.7'
+opencv-python==4.6.0.66; python_version == '3.6'
 opencv-python; python_version > '2.7'
 torchvision==0.2.0
 aenum

@@ -1,4 +1,10 @@
 # A new version of Gibson Environment
+
+[![BuildOnUbuntuLastest](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_ubuntu_latest.yml/badge.svg?branch=master)](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_ubuntu_latest.yml)
+[![BuildManylinux20102014](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_manylinux_2010_2014.yml/badge.svg?branch=master)](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_manylinux_2010_2014.yml)
+[![pypi](https://img.shields.io/pypi/v/gibson.svg)](https://pypi.org/project/gibson/)
+[![Downloads](https://static.pepy.tech/badge/gibson)](http://pepy.tech/project/gibson)
+
 This is a new (and enhanced) version of the Gibson simulator originally developed by the Stanford Vision and Learning Lab, forked from this [repo](https://github.com/StanfordVL/GibsonEnv)). 
 New features:
 * **New simulation modality:** the inaccuracies of the 3D meshes of the environments often produce robot failures, affecting a fast data collection procedure using a robot navigating multiple scenes. To address this, we develop a new simulation modality (by modifying the internal of Gibson) in which the physics is disabled and the robot can be teleported to any possible location of the virtualized scene. To use this new modality, please refer to this [script](https://github.com/aislabunimi/door-detection-long-term/blob/robotic-vision/doors_detection_long_term/scripts/positions_extractor/collect_data_no_physics_multiple_floor.py).
@@ -6,10 +12,30 @@ New features:
 * **Compiled version in PyPI:** we release a compiled version of Gibson in PyPI, so now the simulator can be easily installed by typing ```pip install gibson```. To do this, we implement a complex continuous integration workflow through the Github Actions that build and pubish this new version of Gibson to PyPI. In particular, Gibson is compiled following [PEP 571](https://www.python.org/dev/peps/pep-0571/) (manylinux2010) and [PEP 599](https://www.python.org/dev/peps/pep-0599/) (manylinux2014).
 * **New assets manager:** we provide a command-line tool to automatically download and unzip the necessary assets the simulator needs. Please refer to the [documentation](#download-data)
 
-# GIBSON ENVIRONMENT for Embodied Active Agents with Real-World Perception 
-[![BuildOnUbuntuLastest](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_ubuntu_latest.yml/badge.svg?branch=master)](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_ubuntu_latest.yml)
-[![BuildManylinux20102014](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_manylinux_2010_2014.yml/badge.svg?branch=master)](https://github.com/micheleantonazzi/GibsonEnv/actions/workflows/build_manylinux_2010_2014.yml)
-[![pypi](https://img.shields.io/pypi/v/gibson.svg)](https://pypi.org/project/gibson/)
+## Citation
+#### Original version
+```
+@inproceedings{xiazamirhe2018gibsonenv,
+  title={Gibson {Env}: real-world perception for embodied agents},
+  author={Xia, Fei and R. Zamir, Amir and He, Zhi-Yang and Sax, Alexander and Malik, Jitendra and Savarese, Silvio},
+  booktitle={Computer Vision and Pattern Recognition (CVPR), 2018 IEEE Conference on},
+  year={2018},
+  organization={IEEE}
+}
+```
+#### Our enhanced version
+```
+@misc{antonazzi2024developmentadaptationroboticvision,
+      title={Development and Adaptation of Robotic Vision in the Real-World: the Challenge of Door Detection}, 
+      author={Michele Antonazzi and Matteo Luperto and N. Alberto Borghese and Nicola Basilico},
+      year={2024},
+      url={https://arxiv.org/abs/2401.17996}, 
+}
+```
+
+
+
+# GIBSON ENVIRONMENT for Embodied Active Agents with Real-World Perception
 
 You shouldn't play video games all day, so shouldn't your AI! We built a virtual environment simulator, Gibson, that offers real-world experience for learning perception.  
 

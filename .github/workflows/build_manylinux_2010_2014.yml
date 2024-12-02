@@ -17,16 +17,8 @@ jobs:
           - manylinux_image: manylinux2010
             python_version: '3.10'
 
+    container: micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
     steps:
-      - name: Pre Steps
-        run: |
-          sudo docker rmi $(docker image ls -aq) >/dev/null 2>&1 || true
-          docker rmi micheleantonazzi/manylinux-extended:manylinux2014_x86_64_extended_0.7.1 --force
-          docker rmi micheleantonazzi/manylinux-extended:manylinux2010_x86_64_extended_0.7.1 --force
-      - name: Run Docker
-        run: |
-          docker run --name manylinux -t micheleantonazzi/manylinux-extended:${{ matrix.manylinux_image }}_x86_64_extended_0.7.1
-          yum install sudo
       - uses: actions/checkout@v1
         with:
           submodules: recursive

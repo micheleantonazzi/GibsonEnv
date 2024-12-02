@@ -6,7 +6,7 @@ on: [push, pull_request]
 jobs:
   build_wheels:
     name: Build manylinux2010-2014 wheels
-    runs-on: ubuntu-20.04
+    runs-on: gibson-env-self-hosted
     strategy:
       matrix:
         manylinux_image: [manylinux2010, manylinux2014]

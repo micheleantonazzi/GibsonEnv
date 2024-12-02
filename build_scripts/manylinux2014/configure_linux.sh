@@ -1,5 +1,7 @@
 #!/bin/bash
-
+sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+yum update
 # Install dependency for mpi4pi
 yum install openmpi3* openmpi* minizip* boost boost-devel libffi-devel -y
 export CC=/usr/lib64/openmpi/bin/mpicc

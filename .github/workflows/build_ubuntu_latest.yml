@@ -4,7 +4,7 @@ on: [push, pull_request, pull_request_review]
 
 jobs:
   build:
-    runs-on: gibson-env-self-hosted
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         python-version: ["3.6", "3.8", "3.9", "3.10"]
@@ -46,11 +46,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: Jimver/cuda-toolkit@v0.2.19
+      - uses: Jimver/cuda-toolkit@v0.2.1
         id: cuda-toolkit
         with:
           cuda: '11.2.1'
-      - run: nvcc -V
       - name: Install dependencies
         run: |
           sudo apt update

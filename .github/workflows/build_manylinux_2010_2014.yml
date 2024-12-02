@@ -34,7 +34,6 @@ jobs:
       - name: Build bdists
         run: |
           export CC=/usr/lib64/openmpi/bin/mpicc
-          pip${{ matrix.python_version }} install --upgrade pip setuptools wheel
           pip${{ matrix.python_version }} install -e .
           python${{ matrix.python_version }} setup.py bdist_wheel
           auditwheel repair dist/gibson-*-cp*

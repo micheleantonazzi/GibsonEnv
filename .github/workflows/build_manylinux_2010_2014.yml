@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        manylinux_image: [manylinux2010, manylinux2014]
+        manylinux_image: [manylinux2010]
         python_version: ['3.6', '3.7', '3.8', '3.9', '3.10']
         exclude:
           - manylinux_image: manylinux2010
